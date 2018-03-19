@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=/media/raghukul/Raghu/Lab7_2/top.ncd
+OUTFILE=/media/raghukul/Raghu/Lab7_2/top.bit
+FAMILY=Spartan3E
+PART=xc3s500e-4fg320
+WORKINGDIR=/media/raghukul/Raghu/Lab7_2
+LICENSE=WebPack
+USER_INFO=211450758_0_0_676

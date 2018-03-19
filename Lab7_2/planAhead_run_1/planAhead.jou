@@ -1,0 +1,11 @@
+#-----------------------------------------------------------
+# PlanAhead v14.7 (64-bit)
+# Build 321239 by xbuild on Fri Sep 27 19:24:36 MDT 2013
+# Start of session at: Mon Mar 19 16:33:40 2018
+# Process ID: 8173
+# Log file: /media/raghukul/Raghu/Lab7_2/planAhead_run_1/planAhead.log
+# Journal file: /media/raghukul/Raghu/Lab7_2/planAhead_run_1/planAhead.jou
+#-----------------------------------------------------------
+start_gui
+source /media/raghukul/Raghu/Lab7_2/pa.fromHdl.tcl
+update_compile_order -fileset sim_1
