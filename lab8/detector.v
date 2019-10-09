@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date:    20:29:00 03/04/2018 
+// Create Date:    14:27:13 03/26/2018 
 // Design Name: 
-// Module Name:    full_adder 
+// Module Name:    detector 
 // Project Name: 
 // Target Devices: 
 // Tool versions: 
@@ -18,16 +18,8 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module full_adder(a, b, cin, sum, cout
-        );
-        input a;
-        input b;
-        input cin;
-        output sum;
-        wire sum;
-        output cout;
-        wire cout;
-        assign sum = a^b^cin;
-        assign cout = (a & b) | (b & cin) | (cin & a);
+module detector(
+    );
+
 
 endmodule

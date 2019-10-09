@@ -1,7 +1,0 @@
-verilog work "full_adder.v"
-verilog work "sixteen_arithematic.v"
-verilog work "left_shift.v"
-verilog work "lcd_driver.v"
-verilog work "interface.v"
-verilog work "detector.v"
-verilog work "top.v"

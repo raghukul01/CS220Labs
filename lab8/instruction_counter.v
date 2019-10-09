@@ -1,9 +1,29 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date:    16:19:45 03/26/2018 
+// Design Name: 
+// Module Name:    instruction_counter 
+// Project Name: 
+// Target Devices: 
+// Tool versions: 
+// Description: 
+//
+// Dependencies: 
+//
+// Revision: 
+// Revision 0.01 - File Created
+// Additional Comments: 
+//
+//////////////////////////////////////////////////////////////////////////////////
 module instruction_counter(bit, clk, led
     );
 
     input bit, clk;
     output [7:0] led;
-    wire [7:0] led;
+    reg [7:0] led;
 
     reg [5:0] prog_counter;
     reg [31:0] mem_block[0:63];
@@ -15,6 +35,7 @@ module instruction_counter(bit, clk, led
     reg [1:0] counterj;
     reg [2:0] counteri;
     reg [2:0] counterr;
+    reg [2:0] state;
 
     initial begin
         prog_counter = 0;
@@ -28,6 +49,7 @@ module instruction_counter(bit, clk, led
         func = 0;
         register = 0;
         led = 0;
+        state = 0;
         mem_block[0] = 32'b001000_00000_00100_0011_0100_0101_0110;
 		mem_block[1] = 32'b001000_00000_00101_1111_1111_1111_1111;
 		mem_block[2] = 32'b000000_00101_00100_00110_00000_100000;
@@ -35,7 +57,7 @@ module instruction_counter(bit, clk, led
 		mem_block[4] = 32'b000000_00011_00110_00110_00000_000100;
 		mem_block[5] = 32'b000000_00000_00011_00011_00001_000010;
 		mem_block[6] = 32'b100011_00100_00101_1001_1010_1011_1100;
-		mem_block[7] = 32'b000010_01_0010_0011_0100_0101_0110;
+		mem_block[7] = 32'b000010_000001_0010_0011_0100_0101_0110;
         mem_block[8] = 0; mem_block[9] = 0; mem_block[10] = 0; mem_block[11] = 0; mem_block[12] = 0;
         mem_block[13] = 0; mem_block[14] = 0; mem_block[15] = 0; mem_block[16] = 0; mem_block[17] = 0;
         mem_block[18] = 0; mem_block[19] = 0; mem_block[20] = 0; mem_block[21] = 0; mem_block[22] = 0;
@@ -52,46 +74,72 @@ module instruction_counter(bit, clk, led
 
     always@(posedge clk) begin
         
-        if(prog_counter < 8) begin
-
-            inst <= memblock[prog_counter];
-
-            opcode <= inst[31:26];
-
+        if(prog_counter < 9) begin
+            if(state == 0) begin
+                inst <= mem_block[prog_counter];
+                state <= state + 1;
+		prog_counter <= prog_counter + 1; 
+            end
+            else if(state == 1) begin
+                opcode <= inst[31:26];
+                state <= state + 1;
+            end
+				else begin
             case(opcode)
                 
                 6'b000000: begin
-                    counterr <= counterr + 1;
-                    func <= inst[5:0]
-                    if((func != 6'b011011) && (func != 6'b011010) && (func != 6'b011000) && (func != 6'b011001) && (func != 6'b010011) && (func != 6'b010001) && (func != 6'b001100) && (func != 6'b001000) && (func != 6'b000000)) begin
-                        register <= inst[15:11];
-                        counter[register] <= counter[register] + 1;
+                    if(state == 2) begin
+                        counterr <= counterr + 1;
+                        func <= inst[5:0];
+                        state <= state + 1;
                     end
-                    endcase
+                    else if((func != 6'b011011) && (func != 6'b011010) && (func != 6'b011000) && (func != 6'b011001) && (func != 6'b010011) && (func != 6'b010001) && (func != 6'b001100) && (func != 6'b001000) && (func != 6'b000000)) begin
+                        if(state == 3) begin
+                            register <= inst[15:11];
+                            state <= state + 1;
+                        end
+                        else if(state == 4) begin
+                            counter[register] <= counter[register] + 1;
+                            state <= 0;
+                        end
+                    end
                 end
 
                 6'b000001: begin
-                    ;// Do nothing
+                    state <= 0;
                 end
 
                 6'b000010: begin
+						  if(state == 2) begin
                     counterj <= counterj + 1;
+                    state <= 0;
+						  end
                 end
 
                 6'b000011: begin
                     counterj <= counterj + 1;
+                    state <= 0;
                 end
 
                 default: begin
-                    counteri <= counteri + 1;
-                    if((opcode != 6'b000100) && (opcode != 6'b000101) && (opcode != 6'b000110) && (opcode != 6'b000111) && (opcode != 6'b101000) && (opcode != 6'b101001) && (opcode != 6'b101011)) begin
-                    register <= inst[20:16];
-                    counter[register] <= counter[register] + 1;
+                    if(state == 2) begin
+                        counteri <= counteri + 1;
+                        state <= state + 1;
                     end
+                    else if((opcode != 6'b000100) && (opcode != 6'b000101) && (opcode != 6'b000110) && (opcode != 6'b000111) && (opcode != 6'b101000) && (opcode != 6'b101001) && (opcode != 6'b101011)) begin
+                    if(state == 3) begin
+                        register <= inst[20:16];
+                        state <= state + 1;
+                    end
+                    else if(state == 4) begin
+                        counter[register] <= counter[register] + 1;
+                        state <= 0;
+                    end
+                    end
+                end
                     
             endcase
-
-            prog_counter <= prog_counter + 1; 
+				end
         end
     end
 
@@ -108,5 +156,4 @@ module instruction_counter(bit, clk, led
                 led[7:6] <= counter[6'b00110];
             end
         end
-
-    end
+endmodule

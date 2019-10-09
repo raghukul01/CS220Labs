@@ -1,5 +1,3 @@
-`define WAIT #20000    // Wait time
-
 module lcd_driver(clk, line1, line2, lcd_rs, lcd_w, lcd_e, data);
     
     input clk;

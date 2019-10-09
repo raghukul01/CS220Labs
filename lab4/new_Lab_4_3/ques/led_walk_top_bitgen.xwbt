@@ -1,8 +1,0 @@
-INTSTYLE=ise
-INFILE=/users/btech/ayushb/Lab4_3/ques/led_walk_top.ncd
-OUTFILE=/users/btech/ayushb/Lab4_3/ques/led_walk_top.bit
-FAMILY=Spartan3E
-PART=xc3s500e-4fg320
-WORKINGDIR=/users/btech/ayushb/Lab4_3/ques
-LICENSE=WebPack
-USER_INFO=211450758_0_0_676
